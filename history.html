@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Show-More — Orders (Amazon-style)</title>
+  <style>
+    :root{
+      --bg:#f3f4f6; --card:#fff; --muted:#6b7280; --accent:#b88714; --success:#059669; --danger:#dc2626;
+      --glass: rgba(255,255,255,0.6);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; font-family: Inter, "Segoe UI", Roboto, system-ui, -apple-system, "Helvetica Neue", Arial;
+      background: linear-gradient(180deg,#f8fafc 0%, var(--bg) 100%);
+      color:#0f172a; padding:24px;
+    }
+
+    header{
+      display:flex; gap:16px; align-items:center; justify-content:space-between; margin-bottom:20px;
+    }
+    .logo{
+      display:flex; gap:12px; align-items:center;
+    }
+    .logo .mark{
+      width:44px; height:44px; background-color:#b88714; border-radius:10px;
+      display:grid; place-items:center; color:#fff; font-weight:700;
+      box-shadow: 0 6px 18px rgba(37,99,235,0.12);
+    }
+    h1{font-size:20px; margin:0}
+    .controls{ display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+
+    .btn{
+      display:inline-flex; gap:8px; align-items:center; border:0; padding:10px 12px; border-radius:10px;
+      background:var(--accent); color:#fff; cursor:pointer; font-weight:600; transition:transform .08s ease, box-shadow .08s;
+      box-shadow: 0 6px 16px rgba(37,99,235,0.12);
+    }
+    .btn:hover{ transform: translateY(-2px) }
+    .btn.secondary{ background:#fff; color:#0f172a; border:1px solid #e6edf6; box-shadow:none }
+    .btn.danger{ background:var(--danger); box-shadow: 0 6px 16px rgba(220,38,38,0.12)}
+    .small { padding:8px 10px; font-size:14px; border-radius:8px }
+
+    /* search & filter */
+    .searchbar{
+      display:flex; gap:10px; align-items:center; background:var(--card); padding:12px; border-radius:12px;
+      width:100%; max-width:880px; box-shadow: 0 6px 18px rgba(2,6,23,0.04);
+    }
+    select, input[type="search"]{
+      padding:10px 12px; border-radius:8px; border:1px solid #e6edf6; outline:none; font-size:14px;
+    }
+    input[type="search"]{ width:360px; max-width:60vw; }
+    .actions-row{display:flex; gap:8px; align-items:center}
+
+    /* main layout */
+    main{ display:flex; gap:20px; align-items:flex-start; }
+    .left { flex:1; min-width:0 }
+    .right { width:340px; max-width:34%; min-width:260px }
+
+    /* summary card */
+    .summary {
+      background:linear-gradient(180deg, rgba(255,255,255,0.9), var(--card)); padding:16px; border-radius:12px;
+      box-shadow: 0 6px 18px rgba(2,6,23,0.04);
+    }
+    .summary h3{ margin:0 0 8px 0; font-size:14px; color:var(--muted) }
+    .summary .big{ font-size:20px; font-weight:700; margin-top:6px }
+
+    /* grid of cards (desktop) */
+    .cards {
+      display:grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap:16px; margin-top:18px;
+    }
+
+    .order-card{
+      background:var(--card); border-radius:12px; padding:14px; display:flex; gap:12px; flex-direction:column;
+      box-shadow: 0 6px 20px rgba(2,6,23,0.04); transition: transform .12s ease, box-shadow .12s;
+    }
+    .order-card:hover{ transform: translateY(-6px); box-shadow: 0 14px 40px rgba(2,6,23,0.08); }
+
+    .card-top{ display:flex; gap:12px; align-items:center; justify-content:space-between }
+    .thumb { width:64px; height:64px; border-radius:8px; background: linear-gradient(135deg,#fce7f3, #fef3c7); display:grid; place-items:center; font-weight:700; color:#111827 }
+    .meta { flex:1; min-width:0 }
+    .meta .id { font-weight:700; font-size:14px; margin-bottom:6px }
+    .meta .datetime { color:var(--muted); font-size:13px }
+    .items { color:#111827; margin-top:8px; font-size:14px }
+    .price-row { display:flex; align-items:center; justify-content:space-between; margin-top:12px }
+    .price { font-weight:800; font-size:18px }
+    .status-pill { padding:6px 10px; border-radius:999px; color:#fff; font-weight:700; font-size:12px }
+    .status-paid { background: linear-gradient(90deg,#10b981,#059669) }
+    .status-pending { background: linear-gradient(90deg,#f59e0b,#f97316) }
+    .status-canceled { background: linear-gradient(90deg,#ef4444,#dc2626) }
+
+    .card-actions { display:flex; gap:8px; margin-top:10px; flex-wrap:wrap }
+    .card-actions .btn{ padding:8px 10px; border-radius:8px; font-size:13px }
+
+    /* table header for sort on top of cards for control (desktop) */
+    .table-controls{
+      display:flex; gap:8px; align-items:center; justify-content:space-between;
+      margin-top:8px; margin-bottom:6px;
+    }
+    .sort-hints{ color:var(--muted); font-size:13px }
+
+    /* modal */
+    .modal { position:fixed; inset:0; display:flex; align-items:center; justify-content:center; backdrop-filter: blur(2px);
+      background: rgba(2,6,23,0.35); z-index:200; opacity:0; pointer-events:none; transition:opacity .12s ease; }
+    .modal.show { opacity:1; pointer-events:auto; }
+    .modal-panel { background:var(--card); padding:18px; border-radius:12px; width:420px; max-width:94%; box-shadow:0 12px 40px rgba(2,6,23,0.2) }
+    .modal-panel h3{ margin:0 0 8px 0 }
+
+    .modal-row{ display:flex; justify-content:space-between; gap:12px; margin:8px 0; color:var(--muted) }
+    .modal-actions{ margin-top:12px; display:flex; gap:8px; }
+
+    /* responsive adjustments */
+    @media (max-width: 980px){
+      main{ flex-direction:column }
+      .right{ width:100%; max-width:100% }
+      .cards{ grid-template-columns: 1fr  }
+      input[type="search"]{ width: 100% }
+    }
+    @media (max-width: 560px){
+      .logo h1{ font-size:16px }
+      .cards{ gap:12px }
+      .thumb{ width:56px; height:56px }
+      .card-top{ gap:8px }
+      .card-actions .btn{ padding:8px 10px; font-size:13px }
+    }
+
+    /* mobile stacked card style (receipt-like) */
+    @media (max-width:620px){
+      .order-card{ padding:14px; border-left: 4px solid rgba(37,99,235,0.08) }
+      .price-row{ flex-direction:column; align-items:flex-start; gap:6px }
+    }
+
+    /* subtle focus styles */
+    button:focus, input:focus, select:focus { outline: 3px solid rgba(37,99,235,0.12); outline-offset:2px }
+
+    /* export/clear small text */
+    .muted-small{ color:var(--muted); font-size:13px }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">
+      <div class="mark">SM</div>
+      <div>
+        <h1>Show-More • Orders</h1>
+        <div class="muted-small">Professional Amazon-style order cards — local demo</div>
+      </div>
+    </div>
+
+    <div class="controls">
+      <div class="searchbar" role="search" aria-label="Search orders">
+        <select id="filterType" aria-label="Filter type">
+          <option value="all">All</option>
+          <option value="id">Order ID</option>
+          <option value="items">Items</option>
+          <option value="total">Total</option>
+          <option value="date">Date/Time</option>
+          <option value="status">Status</option>
+        </select>
+        <input id="searchInput" type="search" placeholder="Search orders by id, item, status, total, date..." />
+        <div class="actions-row">
+          <button id="exportBtn" class="btn small secondary">Export CSV</button>
+          <button id="clearBtn" class="btn small danger">Clear All</button>
+        </div>
+      </div>
+
+      <div style="display:flex; gap:8px; align-items:center;">
+       <a href="payment.html"><button id="payButton" class="btn">Make Payment</button></a> 
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="left">
+      <div class="table-controls">
+        <div class="sort-hints">Click card headers to sort — Date, Total, Status, ID</div>
+        <div class="muted-small">Orders: <span id="countBadge">0</span></div>
+      </div>
+
+      <div class="cards" id="cardsContainer"></div>
+    </section>
+
+    <aside class="right">
+      <div class="summary">
+        <h3>Orders Summary</h3>
+        <div class="big" id="totalRevenue">$0.00</div>
+        <div style="display:flex; gap:8px; margin-top:10px;">
+          <div style="flex:1">
+            <div class="muted-small">Total Orders</div>
+            <div id="totalOrders" style="font-weight:700; margin-top:6px">0</div>
+          </div>
+          <div style="flex:1">
+            <div class="muted-small">Paid / Pending</div>
+            <div id="statusCounts" style="font-weight:700; margin-top:6px">0 / 0</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="height:12px"></div>
+
+      <div class="summary" aria-hidden>
+        <h3>Quick Actions</h3>
+        <div style="display:flex; gap:8px; margin-top:10px; flex-direction:column;">
+          <button id="sortDateBtn" class="btn secondary small">Sort by Date</button>
+          <button id="sortTotalBtn" class="btn secondary small">Sort by Total</button>
+          <button id="sortStatusBtn" class="btn secondary small">Sort by Status</button>
+        </div>
+      </div>
+    </aside>
+  </main>
+
+  <!-- View/Edit Modal -->
+  <div id="modal" class="modal" aria-hidden>
+    <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <h3 id="modalTitle">Order Details</h3>
+      <div id="modalBody">
+        <!-- filled dynamically -->
+      </div>
+
+      <div class="modal-actions" style="display:flex; gap:8px;">
+        <button id="modalSave" class="btn">Save changes</button>
+        <button id="modalCancel" class="btn secondary">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /*********
+     * LocalStorage key & initial demo orders
+     *********/
+    const KEY = "showmore_orders_v1";
+
+    const demoOrders = [
+      { id:"ORD-001", date: new Date("2025-10-01T09:00:00").toLocaleString(), items:[ "T-Shirt" ], total:25.99, status:"paid" },
+      { id:"ORD-002", date: new Date("2025-10-10T14:30:00").toLocaleString(), items:[ "Hoodie" ], total:39.50, status:"pending" },
+      { id:"ORD-003", date: new Date("2025-09-20T11:18:00").toLocaleString(), items:[ "Mug", "Sticker" ], total:19.99, status:"paid" }
+    ];
+
+    let orders = JSON.parse(localStorage.getItem(KEY)) || demoOrders.slice();
+    const cardsContainer = document.getElementById("cardsContainer");
+    const searchInput = document.getElementById("searchInput");
+    const filterType = document.getElementById("filterType");
+    const payButton = document.getElementById("payButton");
+    const exportBtn = document.getElementById("exportBtn");
+    const clearBtn = document.getElementById("clearBtn");
+    const countBadge = document.getElementById("countBadge");
+    const totalRevenue = document.getElementById("totalRevenue");
+    const totalOrders = document.getElementById("totalOrders");
+    const statusCounts = document.getElementById("statusCounts");
+    const modal = document.getElementById("modal");
+    const modalBody = document.getElementById("modalBody");
+    const modalSave = document.getElementById("modalSave");
+    const modalCancel = document.getElementById("modalCancel");
+    const sortDateBtn = document.getElementById("sortDateBtn");
+    const sortTotalBtn = document.getElementById("sortTotalBtn");
+    const sortStatusBtn = document.getElementById("sortStatusBtn");
+
+    let currentSort = { key: 'date', asc: false }; // default: newest first
+    let filtered = orders.slice();
+    let editingIndex = null;
+
+    function save() {
+      localStorage.setItem(KEY, JSON.stringify(orders));
+      updateSummary();
+    }
+
+    function updateSummary(){
+      const total = orders.reduce((s,o)=> s + Number(o.total||0), 0);
+      totalRevenue.textContent = $${total.toFixed(2)};
+      totalOrders.textContent = orders.length;
+      const paid = orders.filter(o=>o.status==='paid').length;
+      const pending = orders.filter(o=>o.status==='pending').length;
+      statusCounts.textContent = ${paid} / ${pending};
+      countBadge.textContent = filtered.length;
+    }
+
+    function formatItems(items){
+      if(!items || !items.length) return "—";
+      return items.slice(0,3).join(", ") + (items.length>3 ? ` +${items.length-3}` : "");
+    }
+
+    function statusClass(status){
+      if(status==='paid') return 'status-paid';
+      if(status==='pending') return 'status-pending';
+      return 'status-canceled';
+    }
+
+    function createCard(order, index){
+      const card = document.createElement('article');
+      card.className = 'order-card';
+      // create small thumbnail initials from first item
+      const firstItem = (order.items && order.items[0]) || "Item";
+      const initials = firstItem.split(" ").map(s=>s[0]).slice(0,2).join("").toUpperCase();
+
+      card.innerHTML = `
+        <div class="card-top">
+          <div style="display:flex; gap:12px; align-items:center; min-width:0">
+            <div class="thumb" aria-hidden>${initials}</div>
+            <div class="meta">
+              <div class="id">${order.id}</div>
+              <div class="datetime">${order.date}</div>
+            </div>
+          </div>
+          <div style="text-align:right">
+            <div class="price">$${Number(order.total).toFixed(2)}</div>
+            <div style="height:8px"></div>
+            <div class="status-pill ${statusClass(order.status)}">${order.status.toUpperCase()}</div>
+          </div>
+        </div>
+
+        <div class="items">${formatItems(order.items)}</div>
+
+        <div class="price-row">
+          <div style="color:var(--muted); font-size:13px">Items: ${order.items.length}</div>
+          <div style="color:var(--muted); font-size:13px">${order.date.split(",")[0]}</div>
+        </div>
+
+        <div class="card-actions">
+          <button class="btn view-btn small" data-action="view" data-index="${index}">View</button>
+          <button class="btn edit-btn small" data-action="edit" data-index="${index}">Edit</button>
+          <button class="btn delete-btn small" data-action="delete" data-index="${index}">Delete</button>
+        </div>
+      `;
+
+      // attach events
+      card.querySelectorAll('button[data-action]').forEach(btn=>{
+        btn.addEventListener('click', e=>{
+          const idx = Number(btn.dataset.index);
+          const action = btn.dataset.action;
+          if(action==='view') openView(idx);
+          if(action==='edit') openEdit(idx);
+          if(action==='delete') removeOrder(idx);
+        });
+      });
+
+      return card;
+    }
+
+    function render(list = orders){
+      filtered = list.slice();
+      cardsContainer.innerHTML = "";
+      if(!list.length){
+        cardsContainer.innerHTML = <div style="padding:20px;background:#fff;border-radius:12px;box-shadow:0 6px 18px rgba(2,6,23,0.04);">No orders found.</div>;
+      } else {
+        list.forEach((o,i)=>{
+          const c = createCard(o, i);
+          cardsContainer.appendChild(c);
+        });
+      }
+      updateSummary();
+    }
+
+    /* ---------- Sort helpers ---------- */
+    function sortOrders(key, asc=true){
+      currentSort = {key, asc};
+      orders.sort((a,b)=>{
+        let A = a[key], B = b[key];
+        if(key==='total'){
+          return asc ? Number(A) - Number(B) : Number(B) - Number(A);
+        }
+        // For date, convert to timestamps when possible
+        if(key==='date'){
+          return asc ? new Date(a.date).getTime() - new Date(b.date).getTime() : new Date(b.date).getTime() - new Date(a.date).getTime();
+        }
+        // default string compare
+        A = A ? A.toString() : ""; B = B ? B.toString() : "";
+        return asc ? A.localeCompare(B) : B.localeCompare(A);
+      });
+      save();
+      applySearch(); // reapply search to reflect sort
+    }
+
+    /* ---------- Actions ---------- */
+    function openView(index){
+      editingIndex = index;
+      const o = orders[index];
+      modalBody.innerHTML = `
+        <div style="margin-bottom:8px"><strong>${o.id}</strong></div>
+        <div class="modal-row"><div>Date</div><div>${o.date}</div></div>
+        <div class="modal-row"><div>Items</div><div>${o.items.join(", ")}</div></div>
+        <div class="modal-row"><div>Count</div><div>${o.items.length}</div></div>
+        <div class="modal-row"><div>Total</div><div>$${Number(o.total).toFixed(2)}</div></div>
+        <div class="modal-row"><div>Status</div><div><span class="${statusClass(o.status)}" style="padding:6px 10px;border-radius:999px;color:#fff">${o.status.toUpperCase()}</span></div></div>
+        <hr style="margin:10px 0;border:none;border-top:1px solid #eef2f7">
+        <div style="font-size:13px;color:var(--muted)">You can edit the order below.</div>
+
+        <form id="editForm" style="margin-top:8px; display:flex; flex-direction:column; gap:8px;">
+          <label style="font-size:13px;color:var(--muted)">Items (comma separated)</label>
+          <input name="items" style="padding:8px;border-radius:8px;border:1px solid #e6edf6" value="${o.items.join(", ")}" />
+          <label style="font-size:13px;color:var(--muted)">Total (USD)</label>
+          <input name="total" type="number" step="0.01" style="padding:8px;border-radius:8px;border:1px solid #e6edf6" value="${o.total}" />
+          <label style="font-size:13px;color:var(--muted)">Status</label>
+          <select name="status" style="padding:8px;border-radius:8px;border:1px solid #e6edf6">
+            <option value="paid" ${o.status==='paid'?'selected':''}>Paid</option>
+            <option value="pending" ${o.status==='pending'?'selected':''}>Pending</option>
+            <option value="canceled" ${o.status==='canceled'?'selected':''}>Canceled</option>
+          </select>
+        </form>
+      `;
+      modal.classList.add('show');
+      modal.setAttribute('aria-hidden','false');
+    }
+
+    function openEdit(index){
+      openView(index);
+    }
+
+    function closeModal(){
+      modal.classList.remove('show');
+      modal.setAttribute('aria-hidden','true');
+      editingIndex = null;
+    }
+
+    modalCancel.addEventListener('click', closeModal);
+    modal.addEventListener('click', e=>{ if(e.target===modal) closeModal(); });
+
+    modalSave.addEventListener('click', ()=>{
+      const form = document.querySelector('#editForm');
+      if(!form || editingIndex==null) return;
+      const items = form.elements['items'].value.split(',').map(s=>s.trim()).filter(Boolean);
+      const total = parseFloat(form.elements['total'].value) || 0;
+      const status = form.elements['status'].value || 'paid';
+      orders[editingIndex] = { ...orders[editingIndex], items, total, status };
+      save(); render(orders); closeModal();
+    });
+
+    function removeOrder(index){
+      if(!confirm(Delete ${orders[index].id}? This cannot be undone.)) return;
+      orders.splice(index,1);
+      save();
+      applySearch();
+    }
+
+    /* ---------- Add (Make Payment) ---------- */
+    payButton.addEventListener('click', ()=>{
+      const id = ORD-${String(orders.length+1).padStart(3,'0')};
+      const now = new Date();
+      const newOrder = {
+        id,
+        date: now.toLocaleString(),
+        items: ["Cap","Socks"],
+        total: Number((Math.random()*80+8).toFixed(2)),
+        status: Math.random()>0.2 ? 'paid' : 'pending'
+      };
+      orders.unshift(newOrder); // newest first
+      save(); applySearch();
+      // flash brief message
+      payButton.textContent = 'Payment added ✓';
+      setTimeout(()=> payButton.textContent = 'Make Payment', 1000);
+    });
+
+    /* ---------- Search & Filter ---------- */
+    function applySearch(){
+      const term = (searchInput.value || '').toLowerCase().trim();
+      const type = filterType.value;
+      let out = orders.filter(o=>{
+        if(!term) return true;
+        switch(type){
+          case 'id': return o.id.toLowerCase().includes(term);
+          case 'items': return o.items.join(' ').toLowerCase().includes(term);
+          case 'total': return String(o.total).includes(term);
+          case 'date': return o.date.toLowerCase().includes(term);
+          case 'status': return o.status.toLowerCase().includes(term);
+          default:
+            return (
+              o.id.toLowerCase().includes(term) ||
+              o.items.join(' ').toLowerCase().includes(term)

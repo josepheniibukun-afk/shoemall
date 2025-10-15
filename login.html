@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sheomall Login</title>
+  <link rel="stylesheet" href="signups.css" />
+</head>
+<body>
+  <div class="background">
+    <div class="container">
+      <h1 class="logo">SHOEMALL</h1>
+      <h2 class="title">Welcome Back</h2>
+
+      <form id="login-form">
+        <div class="input-group">
+          <label for="username">Username or Email</label>
+          <input type="text" id="username" placeholder="Enter your username" required />
+        </div>
+
+        <div class="input-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" placeholder="Enter your password" required />
+        </div>
+
+        <button type="submit" id="login-btn">login</button>
+
+        <p class="message" id="message"></p>
+
+        <p class="signup-text">
+          Don't have an account? <a href="signup.html">sign up here</a>
+        </p>
+      </form>
+    </div>
+  </div>
+
+  <script src="login.js"></script>
+</body>
+</html>

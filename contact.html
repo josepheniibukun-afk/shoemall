@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ShoeMall — Contact Us</title>
+  <link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+/>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --gold:#b88714;
+      --gold-600:#a67012;
+      --bg:#fff;
+      --muted:#666;
+      --card-shadow:0 10px 36px rgba(17,17,17,0.08);
+      --maxWidth:1200px;
+      font-family:"Montserrat",sans-serif;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{background:var(--bg);color:#111;line-height:1.5}
+
+    /* ---------- Header ---------- */
+    header{padding:14px 0;background:linear-gradient(180deg,rgba(255,255,255,0.95),#fff);border-bottom:1px solid rgba(0,0,0,0.04);position:sticky;top:0;z-index:90}
+    .nav{max-width:var(--maxWidth);margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:0 20px;}
+    .nav-left{display:flex;align-items:center;gap:12px;}
+    .logo{width:50px;height:50px;border-radius:12px;background:linear-gradient(135deg,var(--gold),var(--gold-600));display:flex;align-items:center;justify-content:center;color:#fff;font-family:"Playfair Display",serif;font-weight:700;font-size:22px;box-shadow:0 6px 20px rgba(168,120,20,0.18);}
+    .brand .text .small{font-size:12px;color:var(--muted)}
+    .brand .text .big{font-size:20px;font-weight:700}
+    .nav-links{display:flex;gap:20px;font-weight:600}
+    .nav-links a{text-decoration:none;color:#111;transition:0.3s}
+    .nav-links a:hover{color:var(--gold)}
+    .hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer}
+    .hamburger div{width:25px;height:3px;background:#111;border-radius:2px}
+    
+    /* ---------- Hero ---------- */
+    .hero-section{background:linear-gradient(180deg,#fff,#fff);padding:60px 20px;text-align:center;position:relative}
+    .hero-section h1{font-family:"Playfair Display",serif;font-size:36px;margin-bottom:12px;color:#111}
+    .hero-section p{font-size:16px;color:var(--muted)}
+
+    /* ---------- Contact container ---------- */
+    .contact-container{max-width:var(--maxWidth);margin:40px auto;padding:0 20px;display:grid;grid-template-columns:1fr 1fr;gap:40px}
+    
+    /* Contact form */
+    .contact-form{background:#fff;padding:28px;border-radius:12px;box-shadow:var(--card-shadow)}
+    .contact-form h2{font-size:24px;margin-bottom:16px;font-weight:700}
+    .contact-form input,.contact-form textarea{width:100%;padding:12px 14px;margin-bottom:14px;border:1px solid rgba(0,0,0,0.1);border-radius:8px;font-size:14px;resize:none}
+    .contact-form button{padding:12px 18px;background:var(--gold);border:none;color:#fff;border-radius:10px;font-weight:700;font-size:14px;cursor:pointer;transition:0.3s}
+    .contact-form button:hover{background:var(--gold-600)}
+
+    /* Contact info */
+    .contact-info{display:flex;flex-direction:column;gap:18px}
+    .contact-info h3{font-size:20px;font-weight:700;color:#111}
+    .contact-info p{color:var(--muted);font-size:14px}
+    .contact-info .info-item{display:flex;align-items:flex-start;gap:12px;flex-direction:column}
+
+    /* Map */
+    .map{width:100%;height:300px;border-radius:12px;overflow:hidden;margin-top:12px}
+
+    /* Footer */
+    footer{background:#0b0b0b;color:#fff;padding:40px 20px;margin-top:40px}
+    footer .wrap{max-width:var(--maxWidth);margin:0 auto;display:flex;gap:24px;flex-wrap:wrap}
+    footer .col{min-width:180px}
+    footer a{color:rgba(255,255,255,0.9);display:block;margin:6px 0;font-size:14px}
+
+    /* Responsive */
+    @media(max-width:900px){
+      .contact-container{grid-template-columns:1fr;gap:30px}
+      .nav-links{display:none;flex-direction:column;background:#fff;position:absolute;top:64px;right:20px;padding:14px;border-radius:12px;box-shadow:var(--card-shadow)}
+      .hamburger{display:flex}
+      .nav-links.show{display:flex}
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="nav">
+      <div class="nav-left">
+        <div class="logo">SM</div>
+        <div class="brand text">
+          <div class="small">Exclusive Footwear</div>
+          <div class="big">ShoeMall</div>
+        </div>
+      </div>
+      <nav>
+        <div class="nav-links" id="navLinks">
+          <a href="index.html">Home</a>
+          <a href="about.html">About</a>
+          <a href="contact.html">Contact</a>
+        </div>
+        <div class="hamburger" id="hamburger">
+          <div></div><div></div><div></div>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero-section">
+    <h1>Contact Us</h1>
+    <p>We’d love to hear from you. Get in touch for support, inquiries, or feedback.</p>
+  </section>
+
+  <!-- Contact Form + Info -->
+  <div class="contact-container">
+    <div class="contact-form">
+      <h2>Send Us a Message</h2>
+      <input type="text" id="name" placeholder="Your Name" required>
+      <input type="email" id="email" placeholder="Your Email" required>
+      <input type="text" id="subject" placeholder="Subject" required>
+      <textarea id="message" rows="5" placeholder="Your Message" required></textarea>
+      <button id="submitBtn">Submit</button>
+      <p id="thankMsg" style="margin-top:10px;color:green;display:none;">Thank you! Your message has been sent.</p>
+    </div>
+
+    <div class="contact-info">
+      <h3>Contact Information</h3>
+      <div class="info-item">
+        <strong>Email:</strong>
+        <p>support@shoemall.com</p>
+      </div>
+      <div class="info-item">
+        <strong>Phone:</strong>
+        <p>+234 801 234 5678</p>
+      </div>
+      <div class="info-item">
+        <strong>Address:</strong>
+        <p>123 Shoe Street, Lagos, Nigeria</p>
+      </div>
+      <div class="map">
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3960.735899232651!2d3.379205414770221!3d6.524379795282654!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x103bf4b173f59b21%3A0x5a3e4f5e2732a2b3!2sLagos%2C%20Nigeria!5e0!3m2!1sen!2sus!4v1702380000000!5m2!1sen!2sus" width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  
+<footer class="footer">
+  <style>
+    .footer {
+      background: #111;
+      color: #ddd;
+      padding: 60px 20px 30px;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .footer-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 40px;
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    .footer h3 {
+      font-size: 1.5rem;
+      color: #fff;
+      margin-bottom: 15px;
+    }
+
+    .footer h4 {
+      color: #fff;
+      margin-bottom: 15px;
+      position: relative;
+    }
+
+    .footer h4::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: -5px;
+      width: 40px;
+      height: 2px;
+      background: #f39c12;
+    }
+
+    .footer p {
+      font-size: 0.95rem;
+      line-height: 1.6;
+      color: #ccc;
+    }
+
+    .footer ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .footer ul li {
+      margin: 8px 0;
+    }
+
+    .footer ul li a {
+      color: #bbb;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    .footer ul li a:hover {
+      color: #f39c12;
+    }
+
+    .social-links a {
+      display: inline-block;
+      margin-right: 15px;
+      font-size: 1.2rem;
+      color: #bbb;
+      transition: 0.3s;
+    }
+
+    .social-links a:hover {
+      color: #f39c12;
+      transform: scale(1.2);
+    }
+
+    .footer-bottom {
+      text-align: center;
+      margin-top: 50px;
+      border-top: 1px solid #333;
+      padding-top: 20px;
+      font-size: 0.9rem;
+      color: #aaa;
+    }
+
+    .footer-bottom .designer {
+      color: #f39c12;
+      font-weight: 600;
+    }
+
+    @media (max-width: 600px) {
+      .footer-container {
+        grid-template-columns: 1fr;
+        text-align: left;
+      }
+      .social-links a {
+        margin-right: 10px;
+      }
+    }
+  </style>
+
+  <div class="footer-container">
+    <div class="footer-col about">
+      <h3>ShoeMall</h3>
+      <p>Your one-stop shop for quality footwear — from classic designs to the latest trends. Step up your style with confidence.</p>
+    </div>
+
+    <div class="footer-col">
+      <h4>Customer Service</h4>
+      <ul>
+        <li><a href="#">Help & FAQs</a></li>
+        <li><a href="#">Shipping & Delivery</a></li>
+        <li><a href="#">Return Policy</a></li>
+        <li><a href="#">Track Your Order</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Quick Links</h4>
+      <ul>
+        <li><a href="about.html">About</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="#">New Arrivals</a></li>
+        <li><a href="#">Top Sellers</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col social">
+      <h4>Follow Us</h4>
+      <div class="social-links">
+        <a href="#"><i class="fab fa-facebook-f"></i></a>
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-x-twitter"></i></a>
+        <a href="#"><i class="fab fa-tiktok"></i></a>
+        <a href="#"><i class="fab fa-whatsapp"></i></a>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p>&copy; 2025 <strong>ShoeMall</strong>. All rights reserved.</p>
+  </div>
+</footer>
+
+<script>
+  // Hamburger toggle
+  const hamburger = document.getElementById('hamburger');
+  const navLinks = document.getElementById('navLinks');
+  hamburger.addEventListener('click', ()=>{ navLinks.classList.toggle('show'); });
+
+  // Form submit
+  document.getElementById('submitBtn').addEventListener('click', ()=>{
+    const name = document.getElementById('name').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const subject = document.getElementById('subject').value.trim();
+    const message = document.getElementById('message').value.trim();
+    if(!name || !email || !subject || !message){
+      alert("Please fill all fields.");
+      return;
+    }
+    document.getElementById('thankMsg').style.display = "block";
+    document.getElementById('name').value='';
+    document.getElementById('email').value='';
+    document.getElementById('subject').value='';
+    document.getElementById('message').value='';
+    setTimeout(()=>document.getElementById('thankMsg').style.display="none",4000);
+  });
+</script>
+
+</body>
+</html>
