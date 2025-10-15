@@ -1,0 +1,115 @@
+/* Full background GIF */
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: 'Poppins', sans-serif;
+}
+
+.background {
+  background: url('background.gif') center/cover no-repeat;
+  height: 100vh;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Container */
+.container {
+  background: rgba(0, 0, 0, 0.75);
+  border-radius: 18px;
+  padding: 40px 35px;
+  width: 350px;
+  text-align: center;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(8px);
+  padding-right: 60px;
+}
+
+/* Logo */
+.logo {
+  font-size: 28px;
+  font-weight: 700;
+  color: gold;
+  margin-bottom: 10px;
+  letter-spacing: 1px;
+}
+
+/* Title */
+.title {
+  color: white;
+  font-size: 18px;
+  margin-bottom: 25px;
+}
+
+/* Inputs */
+.input-group {
+  text-align: left;
+  margin-bottom: 18px;
+}
+
+label {
+  display: block;
+  color: gold;
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+
+input {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid gold;
+  background-color: black;
+  color: gold;
+  font-size: 14px;
+  outline: none;
+}
+
+input::placeholder {
+  color: #c1a44d;
+}
+
+/* Button */
+button {
+  width: 107.2%;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  background-color: gold;
+  color: black;
+  font-weight: bold;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+button:hover {
+  background-color: #d4af37;
+  transform: translateY(-2px);
+}
+
+/* Sign up link */
+.signup-text {
+  color: white;
+  font-size: 14px;
+  margin-top: 20px;
+}
+
+.signup-text a {
+  color: gold;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.signup-text a:hover {
+  text-decoration: underline;
+}
+
+/* Message text */
+.message {
+  margin-top: 15px;
+  color: red;
+  font-size: 14px;
+}

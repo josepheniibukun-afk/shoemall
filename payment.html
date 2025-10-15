@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Add Payment Card — Demo</title>
+  <link rel="stylesheet" href="payment.css" />
+</head>
+<body>
+  <main class="container" role="main">
+    <section class="panel">
+      <h1 class="title">Add a payment card</h1>
+
+      <div class="layout">
+        <!-- Card preview -->
+        <div class="card-wrap" aria-hidden="true">
+          <div class="credit-card" id="credit-card">
+            <div class="card-front">
+              <div class="chip" aria-hidden="true"></div>
+              <div class="brand" id="card-brand" aria-hidden="true">
+                <!-- brand SVGs inserted via CSS/JS -->
+              </div>
+              <div class="card-number" id="card-number-preview">•••• •••• •••• ••••</div>
+              <div class="card-row">
+                <div class="card-holder">
+                  <label class="small">Card holder</label>
+                  <div id="card-holder-preview">FULL NAME</div>
+                </div>
+                <div class="card-expiry">
+                  <label class="small">Expires</label>
+                  <div id="card-expiry-preview">MM/YY</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-back">
+              <div class="magnetic"></div>
+              <div class="cvv-wrap">
+                <label class="small">CVV</label>
+                <div id="card-cvv-preview">•••</div>
+              </div>
+              <div class="brand-back" id="card-brand-back" aria-hidden="true"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Form -->
+        <form class="form" id="card-form" novalidate>
+          <div class="field">
+            <label for="card-number">Card number</label>
+            <div class="input-with-icon">
+              <input id="card-number" name="cardNumber" inputmode="numeric" autocomplete="cc-number"
+                     placeholder="1234 5678 9012 3456" maxlength="23" aria-describedby="cardNumberHelp" />
+              <div class="icon" id="brand-icon" aria-hidden="true"></div>
+            </div>
+            <div class="hint" id="cardNumberHelp">Enter 13–19 digits. We'll detect type automatically.</div>
+            <div class="error" id="card-number-error" aria-live="polite"></div>
+          </div>
+
+          <div class="row">
+            <div class="field small-field">
+              <label for="expiry">Expiry (MM/YY)</label>
+              <input id="expiry" name="expiry" inputmode="numeric" placeholder="MM/YY" maxlength="5" autocomplete="cc-exp"
+                     aria-describedby="expiryHelp" />
+              <div class="hint" id="expiryHelp">e.g. 09/28</div>
+              <div class="error" id="expiry-error" aria-live="polite"></div>
+            </div>
+
+            <div class="field small-field">
+              <label for="cvv">CVV</label>
+              <input id="cvv" name="cvv" inputmode="numeric" placeholder="123" maxlength="4" autocomplete="cc-csc"
+                     aria-describedby="cvvHelp" />
+              <div class="hint" id="cvvHelp">3 digits (4 for Amex)</div>
+              <div class="error" id="cvv-error" aria-live="polite"></div>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="holder-name">Cardholder name</label>
+            <input id="holder-name" name="holderName" inputmode="text" placeholder="Full name as on card"
+                   autocomplete="cc-name" />
+            <div class="error" id="name-error" aria-live="polite"></div>
+          </div>
+
+          <div class="actions">
+            <button type="submit" id="submit-btn" class="btn primary"><a href="success.html" style="text-decoration: none;color: white;">Check Out</a></button>
+            <button type="button" id="cancel-btn" class="btn">Cancel</button>
+          </div>
+
+          <div class="submit-result" id="submit-result" aria-live="polite"></div>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <script src="payment.js" defer></script>
+</body>
+</html>

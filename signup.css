@@ -1,0 +1,111 @@
+body {
+  font-family: 'Poppins', sans-serif;
+  background: rgba(255, 218, 185, 0.24);
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Signup container box */
+form {
+  background-color: white;
+  padding: 40px;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  width: 320px;
+  text-align: center;
+}
+
+/* Heading */
+h1 {
+  color: #333;
+  margin-bottom: 20px;
+  font-size: 24px;
+}
+
+/* Input fields */
+input {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+/* Button */
+button {
+  width: 100px;
+  padding: 12px;
+  background-color: #5563DE;
+  border: none;
+  color: white;
+  font-size: 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+/* Hover effect for button */
+button:hover {
+  background-color: #4451b7;
+}
+
+/* Paragraph link below form */
+p {
+  margin-top: 15px;
+  font-size: 14px;
+  color: #333;
+}
+
+/* Link styling */
+a {
+  color: #5563DE;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+
+
+/* 🪄 Then link the CSS file in your signup.html
+
+At the top inside the <head> tag:
+
+<link rel="stylesheet" href="style.css">
+
+Your updated signup.html should look like this:
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up Page</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <form>
+    <h1>Create an Account</h1>
+    <input type="text" placeholder="Username" required><br>
+    <input type="email" placeholder="Email" required><br>
+    <input type="password" placeholder="Password" required><br>
+    <button type="submit">Sign Up</button>
+
+    <p>Already have an account? 
+       <a href="login.html">Login</a>
+    </p>
+  </form>
+</body>
+</html>
+
+
+---
+
+Would you like me to make it responsive for phones/tablets too (so it looks great on mobile)? */
